@@ -28,10 +28,11 @@ sub vacuum {
 
 sub initiateVacuuming {
 	my ($self, $server, $filter, @files) = @_;
+	return if scalar @files == 0;
 	#build rsync command
 	my $c = "rsync -rav --partial --progress --protect-args -e ssh ";
 	$c .= "$server->{'username'}".'@'."$server->{'hostname'}:\"$server->{'root'}".join("\" :\"$server->{'root'}", @files)."\" $filter->{'path'}";
-#	print $c;# IMMA CHARGIN MAH LAZER
+#	print "$c\n";# IMMA CHARGIN MAH LAZER
 	system($c);	
 }
 
