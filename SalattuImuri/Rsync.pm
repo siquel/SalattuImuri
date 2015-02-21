@@ -18,7 +18,6 @@ sub vacuum {
 	foreach my $serverName ( keys %{$self->{'config'}->getServers()}) {
 		my $server = $self->{'config'}->getServerInfo($serverName);
 	        my @files = $self->listFiles($server);
-		my $i = 0;
 		foreach my $filter (@{$self->{'config'}->getFilters()}) {
 			my $re = "$filter->{'regex'}$filter->{'resolution'}.+$filter->{'source'}";
 			my @matches = grep(/$re/i, @files);
@@ -35,12 +34,6 @@ sub initiateVacuuming {
 #	print $c;# IMMA CHARGIN MAH LAZER
 	system($c);	
 }
-
-sub asd {
-	my $s = "rsync /path/to/file /to/file2/ -rav --partial";
-}
-
-
 
 sub listFiles {
 	my ($self, $server) = @_;
