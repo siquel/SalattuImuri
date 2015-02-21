@@ -22,14 +22,18 @@ sub vacuum {
 		foreach my $filter (@{$self->{'config'}->getFilters()}) {
 			my $re = "$filter->{'regex'}$filter->{'resolution'}.+$filter->{'source'}";
 			my @matches = grep(/$re/i, @files);
-			$self->initiateVacuuming($filter, @matches);
+			$self->initiateVacuuming($server, $filter, @matches);
 		}	
 	}
 }
 
 sub initiateVacuuming {
-	my ($self, $filter, @files) = @_;
-	print join(' ', @files);	
+	my ($self, $server, $filter, @files) = @_;
+	#build rsync command
+	my $c = "rsync -rav --partial --progress --protect-args -e ssh ";
+	$c .= "$server->{'username'}".'@'."$server->{'hostname'}:\"$server->{'root'}".join("\" :\"$server->{'root'}", @files)."\" $filter->{'path'}";
+#	print $c;# IMMA CHARGIN MAH LAZER
+	system($c);	
 }
 
 sub asd {
