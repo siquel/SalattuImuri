@@ -17,14 +17,30 @@ sub vacuum {
 	my ($self) = @_;
 	foreach my $serverName ( keys %{$self->{'config'}->getServers()}) {
 		my $server = $self->{'config'}->getServerInfo($serverName);
-	        my @files = $self->listFiles($server);	
-		print @files;	
+	        my @files = $self->listFiles($server);
+		my $i = 0;
+		foreach my $filter (@{$self->{'config'}->getFilters()}) {
+			my $re = "$filter->{'regex'}$filter->{'resolution'}.+$filter->{'source'}";
+			my @matches = grep(/$re/i, @files);
+			print @matches;
+		}	
 	}
 }
 
+sub processFilters {
+	my ($self, $filters) = @_;
+#	foreach my $filter (
+	
+}
+
+sub asd {
+	my $s = "rsync /path/to/file /to/file2/ -rav --partial";
+}
+
+
+
 sub listFiles {
 	my ($self, $server) = @_;
-#	my $connectionstr = "rsync --list-only -e ssh $server->{'username'}".'@'."$server->{'hostname'}:$server->{'root'}";
 	open(my $rsync_h, '-|', "rsync --list-only -e ssh $server->{'username'}"."@"."$server->{'hostname'}:$server->{'root'} ".
 		'| awk \'{$1=$2=$3=$4=""; print substr($0,5); }\'') or die $!;
 	my @files = <$rsync_h>;

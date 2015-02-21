@@ -42,7 +42,7 @@ sub doHeaderGroup {
 		# skip empty lines or
 		next if ($entry eq "");
 		# regex = path
-		$entry =~ m/(^[^\=]+)=\s*(.+)$/;
+		$entry =~ m/(^.+?)\s*=\s*(.+)$/;
 		my $filter = {
 			source => $h[1],
 			resolution => $h[2],
